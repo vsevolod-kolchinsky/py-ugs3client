@@ -9,6 +9,6 @@ setup(name='py-ugs3client',
       license='MIT',
       packages=['ugs3client'],
       install_requires=[
-          'requests',
+          'requests','cached-property',
       ],
       )

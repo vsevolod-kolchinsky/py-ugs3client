@@ -5,7 +5,7 @@
 '''
 
 import requests
-
+from cached_property import cached_property
 
 class UGS3Client(object):
     ''' minimal client implementation
