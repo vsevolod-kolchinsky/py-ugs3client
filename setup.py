@@ -5,7 +5,7 @@ setup(name='py-ugs3client',
       description='UGS3 Python client',
       url='https://github.com/vsevolod-kolchinsky/py-ugs3client',
       author='Vsevolod Kolchinsky',
-      author_email='d@d.kiev.ua',
+      author_email='vsevolod.kolchinsky@gmail.com',
       license='MIT',
       packages=['ugs3client'],
       )
