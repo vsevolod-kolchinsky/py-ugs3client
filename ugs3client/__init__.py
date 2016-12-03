@@ -45,7 +45,7 @@ class UGS3Client(object):
         if 200 == response.status_code:
             # check headers for Last-Modified
             # if present, using kwargs hash save response and Last-Modified value
-            return response
+            return response.json()
         raise UGS3ClientException(response.status_code,response.json())
 
     def set_authorization(self,auth_value):
@@ -67,16 +67,14 @@ class UGS3Client(object):
     def my_username(self):
         r = self.get_response('get','{}/auth/account/'.format(
                                             self.ugs3_base_url))
-        return r.json()['username']
+        return r['username']
 
     def find_containers(self,**kwargs):
-        r = self.get_response('post','{}/containers/find/'.format(
-                                self.ugs3_base_url),**kwargs)
-        return r.json()
+        return self.get_response('post','{}/containers/find/'.format(
+                                        self.ugs3_base_url),**kwargs)
         
     def get_container(self,uuid):
-        r = self.get_response('get','{}/containers/{}/'.format(
-                                self.ugs3_base_url,uuid))
-        return r.json()
+        return self.get_response('get','{}/containers/{}/'.format(
+                                        self.ugs3_base_url,uuid))
 
 
