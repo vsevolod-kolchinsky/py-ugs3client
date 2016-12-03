@@ -28,7 +28,7 @@ class UGS3Client(object):
                                      })
         
     def login(self,username,password):
-        r = requests.post('{}/auth/token/obtain/'.format(*self.ugs3_base_url),
+        r = requests.post('{}/auth/token/obtain/'.format(self.ugs3_base_url),
                           headers=self.default_headers)
         return r.json()
 
