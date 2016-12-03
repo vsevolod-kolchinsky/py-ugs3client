@@ -27,9 +27,9 @@ class UGS3Client(object):
                                      'Authorization':auth_value,
                                      })
         
-    def login(self,username,password):
+    def login(self,**kwargs):
         r = requests.post('{}/auth/token/obtain/'.format(self.ugs3_base_url),
-                          headers=self.default_headers)
+                          data=kwargs,headers=self.default_headers)
         return r.json()
 
     @cached_property
