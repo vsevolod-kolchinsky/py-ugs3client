@@ -29,16 +29,22 @@ class UGS3Client(object):
         return self.default_headers
     
     def get_response(self,method,url,**kwargs):
+        # hash kwargs and check cache for saved response and Last-Modified
+        # if present, include in headers 'If-Modified-Since'
         request_func = getattr(requests,method.lower())
         response = request_func(url,data=kwargs,headers=self.get_headers())
+        print(response.headers)
+        # obey Not Modified response 304 and return cached value
         if 401 == response.status_code:
             if 'Signature has expired.' == response.json().get('detail',''):
                 if hasattr(self, '_auth_username'):
                     self.login(username=self._auth_username,
                                password=self._auth_password)
-                    return request_func(url,data=kwargs,
-                                        headers=self.get_headers())
+                    response = request_func(url,data=kwargs,
+                                            headers=self.get_headers())
         if 200 == response.status_code:
+            # check headers for Last-Modified
+            # if present, using kwargs hash save response and Last-Modified value
             return response
         raise UGS3ClientException(response.status_code,response.json())
 
