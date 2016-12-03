@@ -1,5 +1,7 @@
 # UGS3 Python SDK
 
+[![Code Climate](https://codeclimate.com/github/vsevolod-kolchinsky/py-ugs3client/badges/gpa.svg)](https://codeclimate.com/github/vsevolod-kolchinsky/py-ugs3client)
+
 ## Installing
 
 ```
