@@ -7,6 +7,7 @@
 import requests
 from cached_property import cached_property
 
+VERSION='0.2'
 
 class UGS3ClientException(Exception):
     pass
@@ -20,6 +21,8 @@ class UGS3Client(object):
         self.ugs3_base_url = 'https://{}'.format(host)
         self.default_headers = {
                                 'Accept':'application/json',
+                                'User-Agent':'{}/{}'.format(self.__class__.__name__,
+                                                            VERSION)
                                 }
 
     def _response_successful(self,response):

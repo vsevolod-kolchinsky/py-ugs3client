@@ -4,9 +4,10 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
+from ugs3client import VERSION
 
 setup(name='py-ugs3client',
-      version='0.2',
+      version=VERSION,
       description='UGS3 Python client',
       long_description=readme(),
       classifiers=[
