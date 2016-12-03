@@ -65,9 +65,8 @@ class UGS3Client(object):
 
     @cached_property
     def my_username(self):
-        r = self.get_response('get','{}/auth/account/'.format(
-                                            self.ugs3_base_url))
-        return r['username']
+        return self.get_response('get','{}/auth/account/'.format(
+                                        self.ugs3_base_url))['username']
 
     def find_containers(self,**kwargs):
         return self.get_response('post','{}/containers/find/'.format(
