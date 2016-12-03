@@ -23,8 +23,8 @@ class UGS3Client(object):
                                 }
 
     def _response_successful(self,response):
-        if 200 != r.status_code:
-            raise UGS3ClientException(r.json())
+        if 200 != response.status_code:
+            raise UGS3ClientException(response.json())
         return True
 
     def set_authorization(self,auth_value):
