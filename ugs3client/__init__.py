@@ -7,6 +7,11 @@
 import requests
 from cached_property import cached_property
 
+
+class UGS3ClientException(Exception):
+    pass
+
+
 class UGS3Client(object):
     ''' minimal client implementation
     '''
@@ -17,16 +22,21 @@ class UGS3Client(object):
                                 'Accept':'application/json',
                                 }
 
+    def set_authorization(self,auth_value):
+        self.default_headers.update({
+                                     'Authorization':auth_value,
+                                     })
+        
+    def login(self,username,password):
+        r = requests.post('{}/auth/token/obtain/'.format(*self.ugs3_base_url),
+                          headers=self.default_headers)
+        return r.json()
+
     @cached_property
     def my_username(self):
         r = requests.get('{}/auth/account/'.format(self.ugs3_base_url),
                          headers=self.default_headers)
         return r.json()['username']
-
-    def set_authorization(self,auth_value):
-        self.default_headers.update({
-                                     'Authorization':auth_value,
-                                     })
 
     def find_containers(self,**kwargs):
         r = requests.post('{}/containers/find/'.format(self.ugs3_base_url),
