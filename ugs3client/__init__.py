@@ -68,12 +68,6 @@ class UGS3Client(object):
                                 self.ugs3_base_url),**kwargs)
         return r.json()
         
-
-    def get_container_payload(self,uuid):
-        r = self.get_response('get','{}/containers/{}/render/'.format(
-                                self.ugs3_base_url,uuid))
-        return r.json()
-
     def get_container(self,uuid):
         r = self.get_response('get','{}/containers/{}/'.format(
                                 self.ugs3_base_url,uuid))
