@@ -8,4 +8,7 @@ setup(name='py-ugs3client',
       author_email='vsevolod.kolchinsky@gmail.com',
       license='MIT',
       packages=['ugs3client'],
+      install_requires=[
+          'requests',
+      ],
       )
