@@ -30,6 +30,10 @@ class UGS3Client(object):
     def login(self,**kwargs):
         r = requests.post('{}/auth/token/obtain/'.format(self.ugs3_base_url),
                           data=kwargs,headers=self.default_headers)
+        if 200 != r.status_code:
+            raise UGS3ClientException(r.json())
+        # auth ok:
+        self.set_authorization('JWT {}'.format(r.json()['token']))
         return r.json()
 
     @cached_property
