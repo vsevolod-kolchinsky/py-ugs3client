@@ -28,7 +28,7 @@ class UGS3Client(object):
                                      'Authorization':auth_value,
                                      })
 
-    def find(self,**kwargs):
+    def find_containers(self,**kwargs):
         r = requests.post('{}/containers/find/'.format(self.ugs3_base_url),
                           data=kwargs,headers=self.default_headers)
         return r.json()
