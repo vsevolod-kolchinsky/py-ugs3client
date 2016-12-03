@@ -7,7 +7,7 @@
 import requests
 from cached_property import cached_property
 
-VERSION='0.3'
+VERSION='0.4'
 
 class UGS3ClientException(Exception):
     pass
