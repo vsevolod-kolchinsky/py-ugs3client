@@ -54,7 +54,7 @@ class UGS3Client(object):
         try:
             return self.memcache.get(key)
         except Exception as e:
-            warnings.warn(repr(e),RuntimeWarning)
+            warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
         pass
     
     def get_headers(self):
