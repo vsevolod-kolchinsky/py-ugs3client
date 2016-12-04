@@ -80,14 +80,14 @@ class UGS3Client(object):
         cache_key = self._build_cache_key(method,url,**kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
-            print repr(local_cache_hit)
             cache_hit_data = json.loads(local_cache_hit)
             request_headers.update({
                                     'If-Modified-Since':cache_hit_data[0],
                                     })
+
         response = self._call_request_func(request_func,method,url,
                                            headers=request_headers,**kwargs)
-        print(response.headers)
+
         if 401 == response.status_code:
             # is re-authentication required and possible?
             if 'Signature has expired.' == response.json().get('detail',''):
