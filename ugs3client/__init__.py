@@ -44,7 +44,7 @@ class UGS3Client(object):
         try:
             self.memcache.set(key,value)
         except Exception as e:
-            warnings.warn(repr(e),RuntimeWarning)
+            warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
         pass
     
     def _cache_retrieve(self,key):
