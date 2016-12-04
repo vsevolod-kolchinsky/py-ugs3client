@@ -65,9 +65,6 @@ class UGS3Client(object):
                              url]))
     
     def _build_cache_key(self,*args,**kwargs):
-        # handle GET params properly
-        if 'params' in kwargs.keys():
-            kwargs = kwargs['params']
         return ''.join(map(lambda x: str(x),
                            [self._get_url_hash(''.join(args)),
                             hash(frozenset(kwargs.items()))]))
@@ -80,8 +77,6 @@ class UGS3Client(object):
     def get_response(self,method,url,**kwargs):
         request_func = getattr(requests,method.lower())
         request_headers = self.get_headers()
-        # hash kwargs and check cache for saved response and Last-Modified
-        # if present, include in headers 'If-Modified-Since'
         cache_key = self._build_cache_key(method,url,**kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
@@ -90,7 +85,6 @@ class UGS3Client(object):
             request_headers.update({
                                     'If-Modified-Since':cache_hit_data[0],
                                     })
-        print request_headers
         response = self._call_request_func(request_func,method,url,
                                            headers=request_headers,**kwargs)
         print(response.headers)
@@ -103,11 +97,9 @@ class UGS3Client(object):
                     response = self._call_request_func(request_func,method,url,
                                                        headers=request_headers,
                                                        **kwargs)
-        # obey Not Modified response 304 and return cached value
+        if 304 == response.status_code:
+            return json.loads(cache_hit_data[1])
         if 200 == response.status_code:
-            # check headers for Last-Modified
-            # if present, using kwargs hash save response and 
-            # Last-Modified value
             if 'Last-Modified' in response.headers:
                 self._cache_store(cache_key,
                                   json.dumps([
