@@ -23,7 +23,8 @@ class UGS3Client(object):
         ugs3 = UGS3Client(host="...",memcache=('localhost',11211))
         ugs3.find_containers(name="test")
     
-    set `memcache=None` to disable client-side caching.
+    set `memcache=None` to disable client-side caching using memcache
+    (not recommended).
     
     '''
     
