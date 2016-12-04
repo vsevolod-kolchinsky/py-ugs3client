@@ -20,6 +20,6 @@ setup(name='py-ugs3client',
       license='Apache Software License',
       packages=['ugs3client'],
       install_requires=[
-          'requests','cached-property',
+          'requests','cached-property','pymemcache',
       ],
       )
