@@ -80,6 +80,7 @@ class UGS3Client(object):
             request_headers.update({
                                     'If-Modified-Since':local_cache_hit[0],
                                     })
+        print request_headers
         response = request_func(url,data=kwargs,headers=request_headers)
         print(response.headers)
         if 401 == response.status_code:
