@@ -47,17 +47,37 @@ class UGS3Client(object):
         pass
     
     def _cache_retrieve(self,key):
+        '''
+        @return: None for cache miss
+        '''
+        try:
+            return self.memcache.get(key)
+        except Exception as e:
+            warnings.warn(repr(e),RuntimeWarning)
         pass
     
     def get_headers(self):
         return self.default_headers
+
+    def _get_url_hash(self,url):
+        return hash(''.join([getattr(self, '_auth_username',''),
+                             url]))
     
+    def _build_cache_key(self,*args,**kwargs):
+        return ''.join(map(lambda x: str(x),
+                           [self._get_url_hash(''.join(args)),
+                            hash(frozenset(kwargs.items()))]))
+        
     def get_response(self,method,url,**kwargs):
-        # hash kwargs and check cache for saved response and Last-Modified
-        # if present, include in headers 'If-Modified-Since'
-        kwargs_hash = hash(frozenset(kwargs.items()))
         request_func = getattr(requests,method.lower())
         request_headers = self.get_headers()
+        # hash kwargs and check cache for saved response and Last-Modified
+        # if present, include in headers 'If-Modified-Since'
+        cache_key = self._build_cache_key(method,url,**kwargs)
+        cached = self._cache_retrieve(cache_key)
+        if cached is not None:
+            print cached
+            pass
         response = request_func(url,data=kwargs,headers=request_headers)
         print(response.headers)
         if 401 == response.status_code:
@@ -71,9 +91,11 @@ class UGS3Client(object):
         # obey Not Modified response 304 and return cached value
         if 200 == response.status_code:
             # check headers for Last-Modified
-            # if present, using kwargs hash save response and Last-Modified value
+            # if present, using kwargs hash save response and 
+            # Last-Modified value
             if 'Last-Modified' in response.headers:
-                pass
+                self._cache_store(cache_key, (response.headers['Last-Modified'],
+                                              response.text))
             return response.json()
         raise UGS3ClientException(response.status_code,response.json())
 
