@@ -33,7 +33,7 @@ class UGS3Client(object):
         self.default_headers = {
                                 'Accept':'application/json',
                                 'User-Agent':'{}/{}'.format(
-                                    self.__class__.__name__,VERSION),
+                                    self.__class__.__name__,__version__),
                                 }
         if memcache is not None:
             self._setup_memcache(memcache)
