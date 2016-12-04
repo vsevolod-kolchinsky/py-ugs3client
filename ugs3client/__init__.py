@@ -65,6 +65,9 @@ class UGS3Client(object):
                              url]))
     
     def _build_cache_key(self,*args,**kwargs):
+        # handle GET params properly
+        if 'params' in kwargs.keys():
+            kwargs = kwargs['params']
         return ''.join(map(lambda x: str(x),
                            [self._get_url_hash(''.join(args)),
                             hash(frozenset(kwargs.items()))]))
