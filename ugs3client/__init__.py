@@ -3,6 +3,7 @@
  (c) 2016, Vsevolod Kolchinsky
  
 '''
+import json
 import requests
 import warnings
 from cached_property import cached_property
@@ -74,10 +75,11 @@ class UGS3Client(object):
         # hash kwargs and check cache for saved response and Last-Modified
         # if present, include in headers 'If-Modified-Since'
         cache_key = self._build_cache_key(method,url,**kwargs)
-        cached = self._cache_retrieve(cache_key)
-        if cached is not None:
-            print cached
-            pass
+        local_cache_hit = self._cache_retrieve(cache_key)
+        if local_cache_hit is not None:
+            request_headers.update({
+                                    'If-Modified-Since':local_cache_hit[0],
+                                    })
         response = request_func(url,data=kwargs,headers=request_headers)
         print(response.headers)
         if 401 == response.status_code:
