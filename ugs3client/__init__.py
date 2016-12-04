@@ -81,7 +81,6 @@ class UGS3Client(object):
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
             cache_hit_data = json.loads(local_cache_hit)
-            print cache_hit_data
             request_headers.update({
                                     'If-Modified-Since':cache_hit_data[0],
                                     })
