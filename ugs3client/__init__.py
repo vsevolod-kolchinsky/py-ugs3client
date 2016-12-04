@@ -72,6 +72,11 @@ class UGS3Client(object):
                            [self._get_url_hash(''.join(args)),
                             hash(frozenset(kwargs.items()))]))
         
+    def _call_request_func(self,request_func,method,url,headers,**kwargs):
+        if 'get' == method.lower():
+            return request_func(url,params=kwargs,headers=headers)
+        return request_func(url,data=kwargs,headers=headers)
+        
     def get_response(self,method,url,**kwargs):
         request_func = getattr(requests,method.lower())
         request_headers = self.get_headers()
@@ -86,7 +91,8 @@ class UGS3Client(object):
                                     'If-Modified-Since':cache_hit_data[0],
                                     })
         print request_headers
-        response = request_func(url,data=kwargs,headers=request_headers)
+        response = self._call_request_func(request_func,method,url,
+                                           headers=request_headers,**kwargs)
         print(response.headers)
         if 401 == response.status_code:
             # is re-authentication required and possible?
@@ -94,8 +100,9 @@ class UGS3Client(object):
                 if hasattr(self, '_auth_username'):
                     self.login(username=self._auth_username,
                                password=self._auth_password)
-                    response = request_func(url,data=kwargs,
-                                            headers=self.get_headers())
+                    response = self._call_request_func(request_func,method,url,
+                                                       headers=request_headers,
+                                                       **kwargs)
         # obey Not Modified response 304 and return cached value
         if 200 == response.status_code:
             # check headers for Last-Modified
@@ -131,7 +138,7 @@ class UGS3Client(object):
 
     def find_containers(self,**kwargs):
         return self.get_response('get','{}/containers/find/'.format(
-                                        self.ugs3_base_url),params=kwargs)
+                                        self.ugs3_base_url),**kwargs)
         
     def get_container(self,uuid):
         return self.get_response('get','{}/containers/{}/'.format(
