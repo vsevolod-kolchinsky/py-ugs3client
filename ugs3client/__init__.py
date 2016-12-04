@@ -128,7 +128,7 @@ class UGS3Client(object):
 
     def find_containers(self,**kwargs):
         return self.get_response('get','{}/containers/find/'.format(
-                                        self.ugs3_base_url),**kwargs)
+                                        self.ugs3_base_url),params=kwargs)
         
     def get_container(self,uuid):
         return self.get_response('get','{}/containers/{}/'.format(
