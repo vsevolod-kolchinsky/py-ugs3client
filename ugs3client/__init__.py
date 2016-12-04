@@ -78,8 +78,9 @@ class UGS3Client(object):
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
             print repr(local_cache_hit)
+            cache_hit_data = json.loads(local_cache_hit)
             request_headers.update({
-                                    'If-Modified-Since':local_cache_hit[0],
+                                    'If-Modified-Since':cache_hit_data[0],
                                     })
         print request_headers
         response = request_func(url,data=kwargs,headers=request_headers)
@@ -98,8 +99,10 @@ class UGS3Client(object):
             # if present, using kwargs hash save response and 
             # Last-Modified value
             if 'Last-Modified' in response.headers:
-                self._cache_store(cache_key, (response.headers['Last-Modified'],
-                                              response.text))
+                self._cache_store(cache_key,
+                                  json.dumps([
+                                    response.headers['Last-Modified'],
+                                    response.text]))
             return response.json()
         raise UGS3ClientException(response.status_code,response.json())
 
