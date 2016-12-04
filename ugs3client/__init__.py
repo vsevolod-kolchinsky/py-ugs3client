@@ -114,7 +114,7 @@ class UGS3Client(object):
                                     response.headers['Last-Modified'],
                                     response.text]))
             return response.json()
-        raise UGS3ClientException(response.status_code,response.json())
+        raise UGS3ClientException(response.status_code,response.text)
 
     def set_authorization(self,auth_value):
         self.default_headers.update({
