@@ -3,8 +3,8 @@
  (c) 2016, Vsevolod Kolchinsky
  
 '''
-
 import requests
+import warnings
 from cached_property import cached_property
 from pymemcache.client.base import Client as pymemcache_client
 
@@ -38,6 +38,15 @@ class UGS3Client(object):
 
     def _setup_memcache(self,memcache_cfg):
         self.memcache = pymemcache_client(memcache_cfg)
+    
+    def _cache_store(self,key,value):
+        try:
+            self.memcache.set(key,value)
+        except Exception as e:
+            warnings.warn(repr(e),RuntimeWarning)
+        pass
+    
+    def _cache_retrieve(self,key):
         pass
     
     def get_headers(self):
