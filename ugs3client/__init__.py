@@ -72,14 +72,10 @@ class UGS3Client(object):
     def get_headers(self):
         return self.default_headers
 
-    def _get_url_hash(self,url):
-        return hash(''.join([getattr(self, '_auth_username',''),
-                             url]))
-    
     def _build_cache_key(self,*args,**kwargs):
-        return ''.join(map(lambda x: str(x),
-                           [self._get_url_hash(''.join(args)),
-                            hash(frozenset(kwargs.items()))]))
+        myargs = list(args) # copy
+        myargs.append(getattr(self, '_auth_username',''))
+        return hash(frozenset(myargs) | frozenset(kwargs.items()))
         
     def _call_request_func(self,request_func,method,url,headers,**kwargs):
         if 'get' == method.lower():
