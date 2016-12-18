@@ -1,7 +1,7 @@
 py-ugs3client
 =============
 
-.. automodule:: UGS3Client
+.. automodule:: ugs3client
 
 .. toctree::
    :maxdepth: 2
