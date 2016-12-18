@@ -1,10 +1,7 @@
-.. py-ugs3client documentation master file, created by
-   sphinx-quickstart on Sun Dec 18 14:44:50 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+py-ugs3client
+=============
 
-Welcome to py-ugs3client's documentation!
-=========================================
+.. automodule:: UGS3Client
 
 .. toctree::
    :maxdepth: 2
