@@ -1,6 +1,8 @@
 py-ugs3client
 =============
 
+.. automodule:: ugs3client
+
 .. autoclass:: UGS3Client
    :members:
    :undoc-members:
