@@ -1,6 +1,6 @@
 # UGS3 Python SDK
 
-[![GitHub release](https://img.shields.io/github/release/vsevolod-kolchinsky/py-ugs3client.svg)]() [![Code Climate](https://codeclimate.com/github/vsevolod-kolchinsky/py-ugs3client/badges/gpa.svg)](https://codeclimate.com/github/vsevolod-kolchinsky/py-ugs3client)
+[![Documentation Status](https://readthedocs.org/projects/py-ugs3client/badge/?version=latest)](http://py-ugs3client.readthedocs.io/?badge=latest) [![GitHub release](https://img.shields.io/github/release/vsevolod-kolchinsky/py-ugs3client.svg)]() [![Code Climate](https://codeclimate.com/github/vsevolod-kolchinsky/py-ugs3client/badges/gpa.svg)](https://codeclimate.com/github/vsevolod-kolchinsky/py-ugs3client)
 
 [Bristar Studio](http://bristarstudio.com) Universinet Gaming Services Python client implementation.
 
