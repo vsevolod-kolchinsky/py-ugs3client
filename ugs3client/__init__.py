@@ -126,8 +126,7 @@ class UGS3Client(object):
                           data=kwargs,headers=self.default_headers)
         if 200 != r.status_code:
             raise UGS3ClientException(r.status_code,r.json())
-        for kwarg in kwargs:
-            setattr(self, '_auth_{}'.format(kwarg), kwargs.get(kwarg))
+        map(lambda x: setattr(self,'_auth_{}'.format(x),kwargs.get(x)),kwargs)
         self.set_authorization('JWT {}'.format(r.json()['token']))
         return r.json()
 
