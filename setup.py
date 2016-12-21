@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='py-ugs3client',
-      version='0.7',
+      version='0.8',
       description='UGS3 Python client',
       long_description=readme(),
       classifiers=[
