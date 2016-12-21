@@ -29,9 +29,7 @@ class UGS3ClientException(Exception):
 class UGS3Client(object):
     ''' UGS3 client
     
-    *****
-    Usage
-    *****
+    Usage:
     
     .. code-block:: python
         :linenos:
@@ -81,9 +79,6 @@ class UGS3Client(object):
             warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
         pass
     
-    def get_headers(self):
-        return self.default_headers
-
     def _build_cache_key(self,*args,**kwargs):
         myargs = list(args) # copy
         myargs.append(getattr(self, '_auth_username',''))
@@ -96,7 +91,7 @@ class UGS3Client(object):
         
     def get_response(self,method,url,**kwargs):
         request_func = getattr(requests,method.lower())
-        request_headers = self.get_headers()
+        request_headers = self.default_headers.copy()
         cache_key = self._build_cache_key(method,url,**kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
