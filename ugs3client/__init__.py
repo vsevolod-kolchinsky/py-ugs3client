@@ -29,8 +29,9 @@ class UGS3ClientException(Exception):
 class UGS3Client(object):
     ''' UGS3 client
     
+    *****
     Usage
-    =====
+    *****
     
     .. code-block:: python
         :linenos:
