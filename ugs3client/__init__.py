@@ -47,6 +47,11 @@ class UGS3Client(object):
     '''
     
     def __init__(self,host='ugs3.universinet.org',memcache=('localhost',11211)):
+        '''
+        :param host: UGS3 API host
+        :param memcache: memcached server (host,port) tuple or None
+        
+        '''
         self.ugs3_base_url = 'https://{}'.format(host)
         self.default_headers = {
                                 'Accept':'application/json',
