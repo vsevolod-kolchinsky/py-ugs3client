@@ -29,8 +29,12 @@ class UGS3ClientException(Exception):
 class UGS3Client(object):
     ''' UGS3 client
     
-    Usage:
+    Usage
+    =====
     
+    .. code-block:: python
+        :linenos:
+        
         ugs3 = UGS3Client(host="...",memcache=('localhost',11211))
         ugs3.find_containers(name="test")
     
