@@ -8,7 +8,7 @@ py-ugs3client
 .. autoclass:: UGS3Client
    :members:
    :private-members:
-   :special-members:
+   :special-members: __init__
    :undoc-members:
 
 .. toctree::
