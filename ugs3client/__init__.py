@@ -180,10 +180,10 @@ class UGS3Client(object):
         return self.get_response('post','{}/containers/'.format(
                                     self.ugs3_base_url),**kwargs)
         
-    def update_container(self,id,ETag,**kwargs):
+    def update_container(self,container_id,ETag,**kwargs):
         ''' Update container
         
-        :param id: existing Container id
+        :param container_id: existing Container id
         :param ETag: Containers last-known ETag assumed as actual
         :returns: JSON -- updated container instance
         :raises: UGS3ClientException
@@ -196,7 +196,7 @@ class UGS3Client(object):
                                      'If-Match':ETag,
                                      })
         return self.get_response('patch','{}/containers/{}/'.format(
-                                    self.ugs3_base_url,id),**kwargs)
+                                    self.ugs3_base_url,container_id),**kwargs)
 
     def find_containers(self,**kwargs):
         ''' Query containers
@@ -207,14 +207,14 @@ class UGS3Client(object):
         return self.get_response('get','{}/containers/paginated_find/'.format(
                                         self.ugs3_base_url),**kwargs)
         
-    def get_container(self,id):
+    def get_container(self,container_id):
         ''' Get container by id
         
-        :param id: existing Container id
+        :param container_id: existing Container id
         :returns: JSON -- container data
         :raises: UGS3ClientException
         '''
         return self.get_response('get','{}/containers/{}/'.format(
-                                        self.ugs3_base_url,id))
+                                        self.ugs3_base_url,container_id))
 
 
