@@ -98,13 +98,14 @@ class UGS3Client(object):
         '''
         request_func = getattr(requests,method.lower())
         request_headers = self.default_headers.copy()
-        cache_key = self._build_cache_key(method,url,**kwargs)
-        local_cache_hit = self._cache_retrieve(cache_key)
-        if local_cache_hit is not None:
-            cache_hit_data = json.loads(local_cache_hit)
-            request_headers.update({
-                                    'If-Modified-Since':cache_hit_data[0],
-                                    })
+        if method.lower() not in ['patch','post']:
+            cache_key = self._build_cache_key(method,url,**kwargs)
+            local_cache_hit = self._cache_retrieve(cache_key)
+            if local_cache_hit is not None:
+                cache_hit_data = json.loads(local_cache_hit)
+                request_headers.update({
+                                        'If-Modified-Since':cache_hit_data[0],
+                                        })
 
         response = self._call_request_func(request_func,method,url,
                                            headers=request_headers,**kwargs)
@@ -165,7 +166,7 @@ class UGS3Client(object):
     def create_container(self,**kwargs):
         ''' Creates container
         
-        :returns: string -- UUID of created container
+        :returns: JSON -- created container instance
         :raises: UGS3ClientException
         '''
         return self.get_response('post','{}/containers/'.format(
@@ -174,6 +175,7 @@ class UGS3Client(object):
     def update_container(self,uuid,**kwargs):
         ''' Update container
         
+        :returns: JSON -- updated container instance
         :raises: UGS3ClientException
         '''
         return self.get_response('patch','{}/containers/{}/'.format(
