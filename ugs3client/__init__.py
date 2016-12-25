@@ -154,6 +154,7 @@ class UGS3Client(object):
     @cached_property
     def my_username(self):
         '''
+        
         :returns: string -- currently authenticated username
         :raises: UGS3ClientException
         '''
@@ -162,6 +163,7 @@ class UGS3Client(object):
 
     def find_containers(self,**kwargs):
         ''' Query containers
+        
         :returns: list -- query results
         :raises: UGS3ClientException
         '''
@@ -170,6 +172,7 @@ class UGS3Client(object):
         
     def get_container(self,uuid):
         ''' Get container by uuid
+        
         :param uuid: existing container uuid
         :returns: JSON -- container data
         :raises: UGS3ClientException
