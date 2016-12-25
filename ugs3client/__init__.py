@@ -50,7 +50,9 @@ class UGS3Client(object):
         :param memcache: memcached server (host,port) tuple or None
         
         '''
+        #: API base URL
         self.ugs3_base_url = 'https://{}'.format(host)
+        #: request headers
         self.default_headers = {
                                 'Accept':'application/json',
                                 'User-Agent':'{}/{}'.format(
@@ -60,11 +62,11 @@ class UGS3Client(object):
             self._setup_memcache(memcache)
 
     def _setup_memcache(self,memcache_cfg):
-        self.memcache = pymemcache_client(memcache_cfg)
+        self._memcache = pymemcache_client(memcache_cfg)
     
     def _cache_store(self,key,value):
         try:
-            self.memcache.set(key,value)
+            self._memcache.set(key,value)
         except Exception as e:
             warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
         pass
@@ -74,7 +76,7 @@ class UGS3Client(object):
         @return: None for cache miss
         '''
         try:
-            return self.memcache.get(key)
+            return self._memcache.get(key)
         except Exception as e:
             warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
         pass
