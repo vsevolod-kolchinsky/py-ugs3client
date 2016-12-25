@@ -3,11 +3,11 @@ py-ugs3client
 
 .. automodule:: ugs3client
 
----
+-----
 
 .. autoexception:: UGS3ClientException
 
----
+-----
 
 .. autoclass:: UGS3Client
    :members:
@@ -15,7 +15,7 @@ py-ugs3client
    :special-members: __init__
    :undoc-members:
 
----
+-----
 
 .. toctree::
    :maxdepth: 2
