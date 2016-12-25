@@ -170,6 +170,14 @@ class UGS3Client(object):
         '''
         return self.get_response('post','{}/containers/'.format(
                                     self.ugs3_base_url),**kwargs)
+        
+    def update_container(self,uuid,**kwargs):
+        ''' Update container
+        
+        :raises: UGS3ClientException
+        '''
+        return self.get_response('patch','{}/containers/{}/'.format(
+                                    self.ugs3_base_url,uuid),**kwargs)
 
     def find_containers(self,**kwargs):
         ''' Query containers
