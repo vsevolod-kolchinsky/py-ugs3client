@@ -9,7 +9,6 @@ py-ugs3client
    :members:
    :private-members:
    :special-members:
-   :inherited-members:
    :undoc-members:
 
 .. toctree::
