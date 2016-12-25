@@ -27,7 +27,7 @@ class UGS3ClientException(Exception):
 
 
 class UGS3Client(object):
-    ''' UGS3 client
+    ''' UGS3 base level operations client
     
     Usage:
     
@@ -145,7 +145,8 @@ class UGS3Client(object):
                                      })
         
     def login(self,**kwargs):
-        ''' Exchange username and password to JWT.
+        ''' Exchange username and password to JWT which would used in further
+        requests.
 
         :param username: UGS account username
         :param password: password
