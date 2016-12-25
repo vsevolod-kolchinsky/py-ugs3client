@@ -188,7 +188,7 @@ class UGS3Client(object):
         :raises: UGS3ClientException
         '''
         if 'payload' in kwargs.keys() and \
-                isinstance(kwargs.get('payload'), dict):
+                isinstance(kwargs.get('payload',None), dict):
             # serialize payload JSON
             kwargs['payload'] = json.dumps(kwargs.get('payload'))
         self.request_headers.update({
