@@ -73,7 +73,7 @@ class UGS3Client(object):
     
     def _cache_retrieve(self,key):
         '''
-        @return: None for cache miss
+        :returns: value or None for cache miss
         '''
         try:
             return self._memcache.get(key)
@@ -92,6 +92,10 @@ class UGS3Client(object):
         return request_func(url,data=kwargs,headers=headers)
         
     def get_response(self,method,url,**kwargs):
+        '''
+        :returns: JSON -- API response
+        :raises: UGS3ClientException
+        '''
         request_func = getattr(requests,method.lower())
         request_headers = self.default_headers.copy()
         cache_key = self._build_cache_key(method,url,**kwargs)
@@ -126,11 +130,19 @@ class UGS3Client(object):
         raise UGS3ClientException(response.status_code,response.text)
 
     def set_authorization(self,auth_value):
+        ''' Set authentication request header
+        '''
         self.default_headers.update({
                                      'Authorization':auth_value,
                                      })
         
     def login(self,**kwargs):
+        ''' Exchange username and password to JWT.
+
+        :param username: UGS account username
+        :param password: password
+        :raises: UGS3ClientException
+        '''
         r = requests.post('{}/auth/token/obtain/'.format(self.ugs3_base_url),
                           data=kwargs,headers=self.default_headers)
         if 200 != r.status_code:
@@ -141,14 +153,27 @@ class UGS3Client(object):
 
     @cached_property
     def my_username(self):
+        '''
+        :returns: string -- currently authenticated username
+        :raises: UGS3ClientException
+        '''
         return self.get_response('get','{}/auth/account/'.format(
                                         self.ugs3_base_url))['username']
 
     def find_containers(self,**kwargs):
+        ''' Query containers
+        :returns: list -- query results
+        :raises: UGS3ClientException
+        '''
         return self.get_response('get','{}/containers/find/'.format(
                                         self.ugs3_base_url),**kwargs)
         
     def get_container(self,uuid):
+        ''' Get container by uuid
+        :param uuid: existing container uuid
+        :returns: JSON -- container data
+        :raises: UGS3ClientException
+        '''
         return self.get_response('get','{}/containers/{}/'.format(
                                         self.ugs3_base_url,uuid))
 
