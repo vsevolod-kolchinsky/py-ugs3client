@@ -3,8 +3,13 @@ py-ugs3client
 
 .. automodule:: ugs3client
 
+.. autoexception:: UGS3ClientException
+
 .. autoclass:: UGS3Client
    :members:
+   :private-members:
+   :special-members:
+   :inherited-members:
    :undoc-members:
 
 .. toctree::
