@@ -161,13 +161,23 @@ class UGS3Client(object):
         return self.get_response('get','{}/auth/account/'.format(
                                         self.ugs3_base_url))['username']
 
+
+    def create_container(self,**kwargs):
+        ''' Creates container
+        
+        :returns: string -- UUID of created container
+        :raises: UGS3ClientException
+        '''
+        return self.get_response('post','{}/containers/'.format(
+                                    self.ugs3_base_url),**kwargs)
+
     def find_containers(self,**kwargs):
         ''' Query containers
         
-        :returns: list -- query results
+        :returns: list -- paginated query results
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','{}/containers/find/'.format(
+        return self.get_response('get','{}/containers/paginated_find/'.format(
                                         self.ugs3_base_url),**kwargs)
         
     def get_container(self,uuid):
