@@ -98,14 +98,13 @@ class UGS3Client(object):
         '''
         request_func = getattr(requests,method.lower())
         request_headers = self.default_headers.copy()
-        if method.lower() not in ['patch','post']:
-            cache_key = self._build_cache_key(method,url,**kwargs)
-            local_cache_hit = self._cache_retrieve(cache_key)
-            if local_cache_hit is not None:
-                cache_hit_data = json.loads(local_cache_hit)
-                request_headers.update({
-                                        'If-Modified-Since':cache_hit_data[0],
-                                        })
+        cache_key = self._build_cache_key(method,url,**kwargs)
+        local_cache_hit = self._cache_retrieve(cache_key)
+        if local_cache_hit is not None:
+            cache_hit_data = json.loads(local_cache_hit)
+            request_headers.update({
+                                    'If-Modified-Since':cache_hit_data[0],
+                                    })
 
         response = self._call_request_func(request_func,method,url,
                                            headers=request_headers,**kwargs)
@@ -178,6 +177,10 @@ class UGS3Client(object):
         :returns: JSON -- updated container instance
         :raises: UGS3ClientException
         '''
+        if 'payload' in kwargs.keys() and \
+                isinstance(kwargs.get('payload'), dict):
+            # serialize payload JSON
+            kwargs['payload'] = json.dumps(kwargs.get('payload'))
         return self.get_response('patch','{}/containers/{}/'.format(
                                     self.ugs3_base_url,uuid),**kwargs)
 
