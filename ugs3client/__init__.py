@@ -52,12 +52,14 @@ class UGS3Client(object):
         '''
         #: API base URL
         self.ugs3_base_url = 'https://{}'.format(host)
-        #: request headers
+        #: persistent request headers
         self.default_headers = {
                                 'Accept':'application/json',
                                 'User-Agent':'{}/{}'.format(
                                     self.__class__.__name__,__version__),
                                 }
+        #: next request headers
+        self.request_headers = {}
         if memcache is not None:
             self._setup_memcache(memcache)
 
@@ -90,6 +92,12 @@ class UGS3Client(object):
         if 'get' == method.lower():
             return request_func(url,params=kwargs,headers=headers)
         return request_func(url,data=kwargs,headers=headers)
+
+    def _get_headers(self):
+        headers = self.default_headers.copy()
+        headers.update(**self.request_headers)
+        self.request_headers = {}
+        return headers
         
     def get_response(self,method,url,**kwargs):
         '''
@@ -97,7 +105,7 @@ class UGS3Client(object):
         :raises: UGS3ClientException
         '''
         request_func = getattr(requests,method.lower())
-        request_headers = self.default_headers.copy()
+        request_headers = self._get_headers()
         cache_key = self._build_cache_key(method,url,**kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
@@ -171,9 +179,11 @@ class UGS3Client(object):
         return self.get_response('post','{}/containers/'.format(
                                     self.ugs3_base_url),**kwargs)
         
-    def update_container(self,uuid,**kwargs):
+    def update_container(self,uuid,ETag,**kwargs):
         ''' Update container
         
+        :param uuid: existing Container UUID
+        :param ETag: Containers last-known ETag assumed as actual
         :returns: JSON -- updated container instance
         :raises: UGS3ClientException
         '''
@@ -181,6 +191,9 @@ class UGS3Client(object):
                 isinstance(kwargs.get('payload'), dict):
             # serialize payload JSON
             kwargs['payload'] = json.dumps(kwargs.get('payload'))
+        self.request_headers.update({
+                                     'If-Match':ETag,
+                                     })
         return self.get_response('patch','{}/containers/{}/'.format(
                                     self.ugs3_base_url,uuid),**kwargs)
 
@@ -196,7 +209,7 @@ class UGS3Client(object):
     def get_container(self,uuid):
         ''' Get container by uuid
         
-        :param uuid: existing container uuid
+        :param uuid: existing Container UUID
         :returns: JSON -- container data
         :raises: UGS3ClientException
         '''
