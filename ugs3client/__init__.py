@@ -20,7 +20,7 @@ import warnings
 from cached_property import cached_property
 from pymemcache.client.base import Client as pymemcache_client
 
-__version__='0.9.0'
+__version__='0.9.1'
 
 class UGS3ClientException(Exception):
     pass
@@ -99,13 +99,14 @@ class UGS3Client(object):
         self.request_headers = {}
         return headers
         
-    def get_response(self,method,url,**kwargs):
+    def get_response(self,method,uri,**kwargs):
         '''
         :returns: JSON -- API response
         :raises: UGS3ClientException
         '''
         request_func = getattr(requests,method.lower())
         request_headers = self._get_headers()
+        url = u'{}{}'.format(self.ugs3_base_url,uri)
         cache_key = self._build_cache_key(method,url,**kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
@@ -167,9 +168,7 @@ class UGS3Client(object):
         :returns: string -- currently authenticated username
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','{}/auth/account/'.format(
-                                        self.ugs3_base_url))['username']
-
+        return self.get_response('get','/auth/account/')['username']
 
     def create_container(self,**kwargs):
         ''' Creates container
@@ -177,8 +176,7 @@ class UGS3Client(object):
         :returns: JSON -- created container instance
         :raises: UGS3ClientException
         '''
-        return self.get_response('post','{}/containers/'.format(
-                                    self.ugs3_base_url),**kwargs)
+        return self.get_response('post','/containers/',**kwargs)
         
     def update_container(self,container_id,ETag,**kwargs):
         ''' Update container
@@ -195,8 +193,7 @@ class UGS3Client(object):
         self.request_headers.update({
                                      'If-Match':ETag,
                                      })
-        return self.get_response('patch','{}/containers/{}/'.format(
-                                    self.ugs3_base_url,container_id),**kwargs)
+        return self.get_response('patch','/containers/{}/'.format(container_id),**kwargs)
 
     def find_containers(self,**kwargs):
         ''' Query containers
@@ -204,8 +201,7 @@ class UGS3Client(object):
         :returns: list -- paginated query results
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','{}/containers/paginated_find/'.format(
-                                        self.ugs3_base_url),**kwargs)
+        return self.get_response('get','/containers/paginated_find/',**kwargs)
         
     def get_container(self,container_id):
         ''' Get container by id
@@ -214,7 +210,6 @@ class UGS3Client(object):
         :returns: JSON -- container data
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','{}/containers/{}/'.format(
-                                        self.ugs3_base_url,container_id))
+        return self.get_response('get','/containers/{}/'.format(container_id))
 
 
