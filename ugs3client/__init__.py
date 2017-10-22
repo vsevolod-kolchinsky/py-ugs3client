@@ -20,7 +20,7 @@ import warnings
 from cached_property import cached_property
 from pymemcache.client.base import Client as pymemcache_client
 
-__version__='0.9.1'
+__version__ = '0.9.1'
 
 class UGS3ClientException(Exception):
     pass
@@ -44,54 +44,54 @@ class UGS3Client(object):
     
     '''
     
-    def __init__(self,host='ugs3.universinet.org',memcache=('localhost',11211)):
+    def __init__(self, host='ugs3.universinet.org', memcache=('localhost', 11211)):
         '''
         :param host: UGS3 API host
         :param memcache: memcached server (host,port) tuple or None
         
         '''
-        #: API base URL
+        # : API base URL
         self.ugs3_base_url = 'https://{}'.format(host)
-        #: persistent request headers
+        # : persistent request headers
         self.default_headers = {
                                 'Accept':'application/json',
                                 'User-Agent':'{}/{}'.format(
-                                    self.__class__.__name__,__version__),
+                                    self.__class__.__name__, __version__),
                                 }
-        #: next request headers
+        # : next request headers
         self.request_headers = {}
         if memcache is not None:
             self._setup_memcache(memcache)
 
-    def _setup_memcache(self,memcache_cfg):
+    def _setup_memcache(self, memcache_cfg):
         self._memcache = pymemcache_client(memcache_cfg)
     
-    def _cache_store(self,key,value):
+    def _cache_store(self, key, value):
         try:
-            self._memcache.set(key,value)
+            self._memcache.set(key, value)
         except Exception as e:
-            warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
+            warnings.warn('pymemcache: {}'.format(repr(e)), RuntimeWarning)
         pass
     
-    def _cache_retrieve(self,key):
+    def _cache_retrieve(self, key):
         '''
         :returns: value or None for cache miss
         '''
         try:
             return self._memcache.get(key)
         except Exception as e:
-            warnings.warn('pymemcache: {}'.format(repr(e)),RuntimeWarning)
+            warnings.warn('pymemcache: {}'.format(repr(e)), RuntimeWarning)
         pass
     
-    def _build_cache_key(self,*args,**kwargs):
-        myargs = list(args) # copy
-        myargs.append(getattr(self, '_auth_username',''))
+    def _build_cache_key(self, *args, **kwargs):
+        myargs = list(args)  # copy
+        myargs.append(getattr(self, '_auth_username', ''))
         return hash(frozenset(myargs) | frozenset(kwargs.items()))
         
-    def _call_request_func(self,request_func,method,url,headers,**kwargs):
+    def _call_request_func(self, request_func, method, url, headers, **kwargs):
         if 'get' == method.lower():
-            return request_func(url,params=kwargs,headers=headers)
-        return request_func(url,data=kwargs,headers=headers)
+            return request_func(url, params=kwargs, headers=headers)
+        return request_func(url, data=kwargs, headers=headers)
 
     def _get_headers(self):
         headers = self.default_headers.copy()
@@ -99,15 +99,15 @@ class UGS3Client(object):
         self.request_headers = {}
         return headers
         
-    def get_response(self,method,uri,**kwargs):
+    def get_response(self, method, uri, **kwargs):
         '''
         :returns: JSON -- API response
         :raises: UGS3ClientException
         '''
-        request_func = getattr(requests,method.lower())
+        request_func = getattr(requests, method.lower())
         request_headers = self._get_headers()
-        url = u'{}{}'.format(self.ugs3_base_url,uri)
-        cache_key = self._build_cache_key(method,url,**kwargs)
+        url = u'{}{}'.format(self.ugs3_base_url, uri)
+        cache_key = self._build_cache_key(method, url, **kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
             cache_hit_data = json.loads(local_cache_hit)
@@ -115,16 +115,16 @@ class UGS3Client(object):
                                     'If-Modified-Since':cache_hit_data[0],
                                     })
 
-        response = self._call_request_func(request_func,method,url,
-                                           headers=request_headers,**kwargs)
+        response = self._call_request_func(request_func, method, url,
+                                           headers=request_headers, **kwargs)
 
         if 401 == response.status_code:
             # is re-authentication required and possible?
-            if 'Signature has expired.' == response.json().get('detail',''):
+            if 'Signature has expired.' == response.json().get('detail', ''):
                 if hasattr(self, '_auth_username'):
                     self.login(username=self._auth_username,
                                password=self._auth_password)
-                    response = self._call_request_func(request_func,method,url,
+                    response = self._call_request_func(request_func, method, url,
                                                        headers=request_headers,
                                                        **kwargs)
         if 304 == response.status_code:
@@ -136,16 +136,16 @@ class UGS3Client(object):
                                     response.headers['Last-Modified'],
                                     response.text]))
             return response.json()
-        raise UGS3ClientException(response.status_code,response.text)
+        raise UGS3ClientException(response.status_code, response.text)
 
-    def set_authorization(self,auth_value):
+    def set_authorization(self, auth_value):
         ''' Set authentication request header
         '''
         self.default_headers.update({
                                      'Authorization':auth_value,
                                      })
         
-    def login(self,**kwargs):
+    def login(self, **kwargs):
         ''' Exchange username and password to JWT which would used in further
         requests.
 
@@ -154,10 +154,10 @@ class UGS3Client(object):
         :raises: UGS3ClientException
         '''
         r = requests.post('{}/auth/token/obtain/'.format(self.ugs3_base_url),
-                          data=kwargs,headers=self.default_headers)
+                          data=kwargs, headers=self.default_headers)
         if 200 != r.status_code:
-            raise UGS3ClientException(r.status_code,r.json())
-        map(lambda x: setattr(self,'_auth_{}'.format(x),kwargs.get(x)),kwargs)
+            raise UGS3ClientException(r.status_code, r.json())
+        map(lambda x: setattr(self, '_auth_{}'.format(x), kwargs.get(x)), kwargs)
         self.set_authorization('JWT {}'.format(r.json()['token']))
         return r.json()
 
@@ -168,17 +168,17 @@ class UGS3Client(object):
         :returns: string -- currently authenticated username
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','/auth/account/')['username']
+        return self.get_response('get', '/auth/account/')['username']
 
-    def create_container(self,**kwargs):
+    def create_container(self, **kwargs):
         ''' Creates container
         
         :returns: JSON -- created container instance
         :raises: UGS3ClientException
         '''
-        return self.get_response('post','/containers/',**kwargs)
+        return self.get_response('post', '/containers/', **kwargs)
         
-    def update_container(self,container_id,ETag,**kwargs):
+    def update_container(self, container_id, ETag, **kwargs):
         ''' Update container
         
         :param container_id: existing Container id
@@ -187,29 +187,29 @@ class UGS3Client(object):
         :raises: UGS3ClientException
         '''
         if 'payload' in kwargs.keys() and \
-                isinstance(kwargs.get('payload',None), dict):
+                isinstance(kwargs.get('payload', None), dict):
             # serialize payload JSON
             kwargs['payload'] = json.dumps(kwargs.get('payload'))
         self.request_headers.update({
                                      'If-Match':ETag,
                                      })
-        return self.get_response('patch','/containers/{}/'.format(container_id),**kwargs)
+        return self.get_response('patch', '/containers/{}/'.format(container_id), **kwargs)
 
-    def find_containers(self,**kwargs):
+    def find_containers(self, **kwargs):
         ''' Query containers
         
         :returns: list -- paginated query results
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','/containers/paginated_find/',**kwargs)
+        return self.get_response('get', '/containers/paginated_find/', **kwargs)
         
-    def get_container(self,container_id):
+    def get_container(self, container_id):
         ''' Get container by id
         
         :param container_id: existing Container id
         :returns: JSON -- container data
         :raises: UGS3ClientException
         '''
-        return self.get_response('get','/containers/{}/'.format(container_id))
+        return self.get_response('get', '/containers/{}/'.format(container_id))
 
 
