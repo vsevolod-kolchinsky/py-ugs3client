@@ -36,4 +36,5 @@ containers = ugs3.find_containers(payload__type=1)
 
 ```
 
+See [docs](http://py-ugs3client.readthedocs.io/)
    
