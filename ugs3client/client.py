@@ -15,6 +15,7 @@
    limitations under the License.
  
 '''
+from __future__ import unicode_literals
 import json
 import requests
 import warnings
@@ -104,7 +105,7 @@ class UGS3Client(object):
         '''
         request_func = getattr(requests, method.lower())
         request_headers = self._get_headers()
-        url = u'{}{}'.format(self.ugs3_base_url, uri)
+        url = '{}{}'.format(self.ugs3_base_url, uri)
         cache_key = self._build_cache_key(method, url, **kwargs)
         local_cache_hit = self._cache_retrieve(cache_key)
         if local_cache_hit is not None:
