@@ -211,4 +211,3 @@ class UGS3Client(object):
         '''
         return self.get_response('get', '/containers/{}/'.format(container_id))
 
-
