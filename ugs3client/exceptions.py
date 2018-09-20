@@ -35,5 +35,4 @@ class UGS3ClientException(Exception):
             warnings.warn('do not index exception, use message property', FutureWarning)
             return self.message
         raise TypeError("'UGS3ClientException' object does not support indexing")
- 
 
