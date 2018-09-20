@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-   Copyright 2016, 2018 Vsevolod Kolchinsky
+   Copyright 2018 Vsevolod Kolchinsky
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,15 +15,8 @@
    limitations under the License.
  
 '''
-import json
-import requests
-import warnings
-from cached_property import cached_property
-from pymemcache.client.base import Client as pymemcache_client
 
-__version__ = '1.0-dev'
-
-from exceptions import UGS3ClientException
-from client import UGS3Client
+class UGS3ClientException(Exception):
+    pass
 
 
