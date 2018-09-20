@@ -15,11 +15,6 @@
    limitations under the License.
  
 '''
-import json
-import requests
-import warnings
-from cached_property import cached_property
-from pymemcache.client.base import Client as pymemcache_client
 
 __version__ = '1.0-dev'
 
