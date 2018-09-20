@@ -15,8 +15,25 @@
    limitations under the License.
  
 '''
+from __future__ import unicode_literals
+import json
+import warnings
+
 
 class UGS3ClientException(Exception):
-    pass
+    
+    def __init__(self, status_code=None, message=None, *args):
+        self.status_code = status_code
+        self.message = message
+        super(UGS3ClientException, self).__init__(status_code, message, *args)
 
+    def __getitem__(self, index):
+        if 0 == index:
+            warnings.warn('do not index exception, use status_code property', FutureWarning)
+            return self.status_code
+        elif 1 == index:
+            warnings.warn('do not index exception, use message property', FutureWarning)
+            return self.message
+        raise TypeError("'UGS3ClientException' object does not support indexing")
+ 
 
