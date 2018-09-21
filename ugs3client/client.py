@@ -54,10 +54,10 @@ class UGS3Client(object):
         self.ugs3_base_url = 'https://{}'.format(host)
         # : persistent request headers
         self.default_headers = {
-                                'Accept':'application/json',
-                                'User-Agent':'{}/{}'.format(
-                                    self.__class__.__name__, __version__),
-                                }
+            'Accept':'application/json',
+            'User-Agent':'{}/{}'.format(
+                self.__class__.__name__, __version__),
+            }
         # : next request headers
         self.request_headers = {}
         if memcache is not None:
@@ -112,29 +112,29 @@ class UGS3Client(object):
         if local_cache_hit is not None:
             cache_hit_data = json.loads(local_cache_hit)
             request_headers.update({
-                                    'If-Modified-Since':cache_hit_data[0],
-                                    })
+                'If-Modified-Since':cache_hit_data[0],
+                })
 
-        response = self._call_request_func(request_func, method, url,
-                                           headers=request_headers, **kwargs)
+        response = self._call_request_func(
+            request_func, method, url, headers=request_headers, **kwargs)
 
         if 401 == response.status_code:
             # is re-authentication required and possible?
             if 'Signature has expired.' == response.json().get('detail', ''):
                 if hasattr(self, '_auth_username'):
-                    self.login(username=self._auth_username,
-                               password=self._auth_password)
-                    response = self._call_request_func(request_func, method, url,
-                                                       headers=request_headers,
-                                                       **kwargs)
+                    self.login(
+                        username=self._auth_username, 
+                        password=self._auth_password)
+                    response = self._call_request_func(
+                        request_func, method, url, headers=request_headers,
+                        **kwargs)
         if 304 == response.status_code:
             return json.loads(cache_hit_data[1])
         if 200 == response.status_code:
             if 'Last-Modified' in response.headers:
-                self._cache_store(cache_key,
-                                  json.dumps([
-                                    response.headers['Last-Modified'],
-                                    response.text]))
+                self._cache_store(
+                    cache_key, json.dumps([
+                        response.headers['Last-Modified'], response.text]))
             return response.json()
         raise UGS3ClientException(response.status_code, response.text)
 
@@ -142,8 +142,8 @@ class UGS3Client(object):
         ''' Set authentication request header
         '''
         self.default_headers.update({
-                                     'Authorization':auth_value,
-                                     })
+            'Authorization':auth_value,
+            })
         
     def login(self, **kwargs):
         ''' Exchange username and password to JWT which would used in further
@@ -153,10 +153,13 @@ class UGS3Client(object):
         :param password: password
         :raises: UGS3ClientException
         '''
-        r = requests.post('{}/auth/token/obtain/'.format(self.ugs3_base_url),
-                          data=kwargs, headers=self.default_headers)
+        r = requests.post(
+            '{}/auth/token/obtain/'.format(self.ugs3_base_url), data=kwargs,
+            headers=self.default_headers)
+        
         if 200 != r.status_code:
             raise UGS3ClientException(r.status_code, r.json())
+        
         map(lambda x: setattr(self, '_auth_{}'.format(x), kwargs.get(x)), kwargs)
         self.set_authorization('JWT {}'.format(r.json()['token']))
         return r.json()
