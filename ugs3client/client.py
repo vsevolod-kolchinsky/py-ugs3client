@@ -22,6 +22,7 @@ import warnings
 from cached_property import cached_property
 from pymemcache.client.base import Client as pymemcache_client
 
+from . import __version__
 from exceptions import UGS3ClientException
 
 
