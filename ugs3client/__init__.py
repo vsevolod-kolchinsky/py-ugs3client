@@ -15,8 +15,12 @@
    limitations under the License.
  
 '''
+from __future__ import unicode_literals
+
 
 __version__ = '1.0-dev'
+__author__ = 'https://github.com/vsevolod-kolchinsky'
+
 
 from exceptions import UGS3ClientException
 from client import UGS3Client
