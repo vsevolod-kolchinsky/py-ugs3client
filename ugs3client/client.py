@@ -99,7 +99,12 @@ class UGS3Client(object):
         headers.update(**self.request_headers)
         self.request_headers = {}
         return headers
-        
+    
+    def _auth_and_retry(self, request_func, method, url, headers, **kwargs):
+        self.login(username=self._auth_username, password=self._auth_password)
+        return self._call_request_func(
+            request_func, method, url, headers, **kwargs)
+
     def get_response(self, method, uri, **kwargs):
         '''
         :returns: JSON -- API response
@@ -123,10 +128,7 @@ class UGS3Client(object):
             # is re-authentication required and possible?
             if 'Signature has expired.' == response.json().get('detail', ''):
                 if hasattr(self, '_auth_username'):
-                    self.login(
-                        username=self._auth_username, 
-                        password=self._auth_password)
-                    response = self._call_request_func(
+                    response = self._auth_and_retry(
                         request_func, method, url, headers=request_headers,
                         **kwargs)
         if 304 == response.status_code:
