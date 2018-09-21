@@ -24,6 +24,7 @@ from pymemcache.client.base import Client as pymemcache_client
 
 from . import __version__
 from exceptions import UGS3ClientException
+import defaults
 
 
 class UGS3Client(object):
@@ -44,7 +45,7 @@ class UGS3Client(object):
     
     '''
     
-    def __init__(self, host='ugs3.universinet.org', memcache=('localhost', 11211)):
+    def __init__(self, host=defaults.HOST, memcache=defaults.MEMCACHE):
         '''
         :param host: UGS3 API host
         :param memcache: memcached server (host,port) tuple or None
