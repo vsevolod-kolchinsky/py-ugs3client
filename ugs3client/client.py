@@ -194,8 +194,8 @@ class UGS3Client(object):
             # serialize payload JSON
             kwargs['payload'] = json.dumps(kwargs.get('payload'))
         self.request_headers.update({
-                                     'If-Match':ETag,
-                                     })
+            'If-Match':ETag,
+            })
         return self.get_response('patch', '/containers/{}/'.format(container_id), **kwargs)
 
     def find_containers(self, **kwargs):
